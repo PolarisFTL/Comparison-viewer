@@ -1,0 +1,16 @@
+'use strict';
+// Optional developer verification with real Canvas/Skia. No runtime app dependency.
+// Set NODE_PATH to an existing @napi-rs/canvas installation, or install it for this test only.
+const assert=require('node:assert/strict'),layout=require('../js/export-layout.js');
+const {createCanvas}=require(process.env.RGBT_CANVAS_MODULE||'@napi-rs/canvas');
+const plain={showTitles:false,showIds:false,padding:3,gapX:5,gapY:7};
+let checks=0;function test(name,fn){fn();checks++;console.log('PASS '+name)}
+function checker(width,height,offset=0){const canvas=createCanvas(width,height),ctx=canvas.getContext('2d'),pixels=ctx.createImageData(width,height);for(let y=0;y<height;y++)for(let x=0;x<width;x++){const i=(y*width+x)*4;pixels.data[i]=(x+y)%2?255:0;pixels.data[i+1]=(x*29+offset)%256;pixels.data[i+2]=(y*37+offset)%256;pixels.data[i+3]=255}ctx.putImageData(pixels,0,0);return canvas}
+function render(plan,images){const canvas=createCanvas(plan.width,plan.height),ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,plan.width,plan.height);for(const rect of plan.rects)layout.drawImage(ctx,images[rect.row][rect.col],rect);return canvas}
+function pixels(canvas,x,y,w,h){return Buffer.from(canvas.getContext('2d').getImageData(x,y,w,h).data)}
+const methods=[{mi:0,name:'Input'},{mi:1,name:'Model'}],images=[[checker(17,13),checker(9,7,10)],[checker(7,21,20),checker(23,5,30)]],rows=images.map((list,si)=>({si,label:'sample-'+si,cells:list.map(img=>({width:img.width,height:img.height}))}));
+test('Real Canvas native collage preserves every source RGBA pixel in all mixed-size cells',()=>{const plan=layout.planFigure(rows,methods,plain),out=render(plan,images);for(const rect of plan.rects)assert.deepEqual(pixels(out,rect.out.x,rect.out.y,rect.crop.width,rect.crop.height),pixels(images[rect.row][rect.col],0,0,rect.crop.width,rect.crop.height))});
+test('Checkerboard ROI export preserves exactly the outward-rounded original crop pixels',()=>{const selected=rows.map(row=>({...row,roi:{x:.13,y:.17,w:.51,h:.46}})),plan=layout.planFigure(selected,methods,{...plain,roi:true}),out=render(plan,images);for(const rect of plan.rects){const c=rect.crop;assert.deepEqual(pixels(out,rect.out.x,rect.out.y,c.width,c.height),pixels(images[rect.row][rect.col],c.x,c.y,c.width,c.height))}});
+test('PNG encode and decode retain the same native image pixels',()=>{const plan=layout.planFigure(rows,methods,plain),out=render(plan,images),png=out.toBuffer('image/png');assert.ok(png.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])));const pngjs=require('pngjs').PNG,decoded=pngjs.sync.read(png);assert.equal(decoded.width,plan.width);assert.equal(decoded.height,plan.height);assert.deepEqual(Buffer.from(decoded.data),pixels(out,0,0,plan.width,plan.height))});
+test('White padding and inter-column gutters contain no source pixels',()=>{const plan=layout.planFigure(rows,methods,plain),out=render(plan,images);assert.deepEqual(pixels(out,0,0,3,3),Buffer.alloc(3*3*4,255));const gapX=plan.columns[0].x+plan.columns[0].width;assert.deepEqual(pixels(out,gapX,0,plain.gapX,plan.height),Buffer.alloc(plain.gapX*plan.height*4,255))});
+console.log(checks+' real Canvas pixel checks passed.');
