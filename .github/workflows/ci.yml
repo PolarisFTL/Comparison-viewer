@@ -47,7 +47,7 @@ jobs:
         if: matrix.os == 'windows-latest' && matrix.python == '3.12'
         with:
           name: clean-source
-          path: dist/RGBT-Comparison-Viewer-source.zip*
+          path: dist/Comparison-Viewer-source.zip*
 
   portable:
     if: github.event_name == 'workflow_dispatch' && inputs.build_portable
