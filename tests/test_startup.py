@@ -25,8 +25,8 @@ class StartupPolicyTests(unittest.TestCase):
         self.port=48770
         self.args=['--workspace',str(self.local),'--port',str(self.port),'--no-browser']
 
-    def run_policy(self,existing_lan,existing_subnets,extra=(),release_sequence=None,existing_version=None):
-        health={'app':server.APP,'version':existing_version or server.VERSION,'project':self.project,'lanEnabled':existing_lan,
+    def run_policy(self,existing_lan,existing_subnets,extra=(),release_sequence=None,existing_version=None,existing_app=None):
+        health={'app':existing_app or server.APP,'version':existing_version or server.VERSION,'project':self.project,'lanEnabled':existing_lan,
                 'allowedSubnets':existing_subnets}
         calls=[]
         def urlopen(request,timeout):
@@ -65,6 +65,11 @@ class StartupPolicyTests(unittest.TestCase):
     def test_older_application_version_is_restarted_without_changing_network_scope(self):
         result=self.run_policy(False,[],existing_version='2.0.0')
         self.assert_restart(result,False)
+
+    def test_legacy_application_name_restarts_same_workspace_without_migration(self):
+        result=self.run_policy(False,[],existing_app='RGBT Comparison Viewer')
+        self.assert_restart(result,False)
+        self.assertEqual(result['configure'].call_args.args[1],self.local)
 
     def test_local_to_lan_restarts(self):
         result=self.run_policy(False,[],['--lan','--allow-subnet','192.168.1.0/24'])
@@ -120,6 +125,7 @@ class StartupPolicyTests(unittest.TestCase):
         self.assertEqual(command[:3],['exec','/usr/bin/open','-n'])
         self.assertIn('--args',command)
         self.assertIn('$@',command)
+        self.assertIn('$SCRIPT_DIR/ComparisonViewer.app',command)
 
 
     def test_version_restart_respects_active_export_shutdown_conflict(self):

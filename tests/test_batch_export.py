@@ -101,6 +101,7 @@ class BatchExportTests(unittest.TestCase):
     def test_folder_bytes_csv_and_mapping_are_exact(self):
         job=self.wait(self.start());self.assertEqual(job['status'],'done',job)
         result=job['result'];directory=Path(result['batchDirectory'])
+        self.assertTrue(directory.name.startswith('Comparison-'))
         report=json.loads((directory/'report.json').read_text(encoding='utf-8'))
         for entry in report['entries']:
             source=Path(self.config['methods'][0 if entry['methodId']=='a' else 1]['root'])/entry['sample']
