@@ -1,0 +1,12 @@
+{
+  "schema": 2,
+  "dataset": "我的图像对比实验（此文件仅为模板）",
+  "datasetId": "f19e5bd2-7f87-4fe3-a44a-ab6ca6f423d2",
+  "referenceId": "input",
+  "methods": [
+    {"id": "input", "name": "Input", "root": "/Users/YOUR_NAME/YOUR_DATA/Input"},
+    {"id": "baseline", "name": "Baseline", "root": "/Users/YOUR_NAME/YOUR_DATA/Baseline"},
+    {"id": "ours", "name": "Ours", "root": "/Users/YOUR_NAME/YOUR_DATA/Ours"},
+    {"id": "gt", "name": "GT", "root": "/Users/YOUR_NAME/YOUR_DATA/GT"}
+  ]
+}
