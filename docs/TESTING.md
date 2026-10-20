@@ -1,4 +1,14 @@
-# 2.2 本轮验收：可配置共识人数与精选原图小库
+# Comparison Viewer 2.2.1：发布前本地回归
+
+日期：2026-10-20。Windows 本地 Python 完整回归 127 项：126 通过，1 项因 Windows 符号链接权限跳过，49.001 秒。新增检查覆盖继承 CP1252 管道编码时的中文索引进度、中文错误路径、索引器作为库导入／构建时不改变宿主输出编码，以及更名前的同一 workspace 原位重启兼容。CLI 输出采用 UTF-8；更名不迁移既有 local 数据，也不修改源图。
+
+项目名称、仓库与发布产物统一为 Comparison Viewer、`comparison-viewer`、`ComparisonViewer.exe` 和 `Comparison-Viewer-*.zip`。更名不把下方真实 RGB-T / DroneVehicle 数据测试扩写成其他任务的实测，也不要求已有用户移动项目或图像目录。新的 CI 结果须以实际 Actions 记录为准；macOS 原生 GUI 仍未经实机验收。
+
+下方保留各版本的独立测试基线。2.2 的 JavaScript 65 项无依赖检查与 4 项真实 Canvas／PNG 回读结果不变；本段不把历史执行时间冒充更名后的重新测试。
+
+---
+
+# 2.2 历史验收：可配置共识人数与精选原图小库
 
 日期：2026-10-19～20。Windows 11 x64、Python 3.12.14、Chromium。下面区分本轮实测、历史基线与尚未验证项目。
 

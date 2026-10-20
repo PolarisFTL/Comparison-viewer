@@ -1,6 +1,8 @@
-# 中文使用教程
+# Comparison Viewer 中文使用教程
 
 ## 1. 主机启动
+
+Windows x64 便携包完整解压后双击 `ComparisonViewer.exe`，无需安装 Python、Node 或 .NET。主程序与源码包均使用 Comparison Viewer 名称；旧用户已保存的项目目录无需为更名而移动。源码 ZIP 的顶层文件夹为 `Comparison-Viewer/`。
 
 源码版支持 Windows 和 macOS，主机需要 Python 3.9+，运行时只用标准库。Windows 双击 `Start-Windows.bat`；macOS 双击 `Start-macOS.command`。启动器查找可用 Python，打开默认浏览器，通常进入 `http://127.0.0.1:8770/setup`。保留启动器控制台；关闭浏览器不等于退出服务。
 
@@ -8,7 +10,7 @@ macOS 需要先解压完整项目到可写目录，安装 Python 3.9+，再双�
 
 若使用实际发布的便携包，按包内说明启动；便携包与源码版的依赖不同。macOS 的 Intel / Apple Silicon 构建不能互相冒充原生构建，且未签名应用可能需要用户确认。
 
-Windows 2.1 便携 EXE 已完成构建与实际启动／PNG 导出测试，在只有 Windows PATH、没有可调用 Python／Node 的环境仍可启动。macOS 当前交付源码，已准备系统适配和 CI 构建流程，但本轮没有 macOS 实机或远程 CI 执行记录。Windows／macOS 原生目录对话框已实现，GUI 操作尚未逐项实测，不将代码存在视为对话框验收通过。
+既有 Windows 便携 EXE 基线已完成实际启动与 PNG 导出测试，在只有 Windows PATH、没有可调用 Python／Node 的环境仍可启动。macOS 当前交付源码，已准备系统适配和 CI 构建流程，macOS 实机与原生目录对话框 GUI 尚未验收；CI 状态以仓库实际 Actions 记录为准。不能将代码存在视为对话框验收通过。
 
 ## 2. 先配置数据
 

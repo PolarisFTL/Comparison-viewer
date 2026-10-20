@@ -1,10 +1,10 @@
-# RGBT Detection Comparison Viewer
+# Comparison Viewer
 
 Technical and User Report - English Edition 2.2.1
 
-Release 2.2.1 adds Chinese/English README switching, refreshed interface artwork, and public synthetic screenshots. It adds no analysis feature. The 2.1 / 2.2 test baselines remain below; release checks are in TESTING.md.
+Release 2.2.1 adopts the general name Comparison Viewer, adds bilingual README navigation, refreshes artwork/screenshots, and fixes Windows Chinese CLI encoding. It adds no analysis feature. Historical 2.1 / 2.2 baselines remain below.
 
-Authors: PolarisFTL and GPT 6 Astra. A local workspace for comparing method outputs, selecting representative samples, and reviewing images together on a trusted LAN.
+Authors: PolarisFTL and GPT 6 Astra. A local workspace for comparing sample-aligned detection, segmentation, generation, enhancement, and other image outputs. RGB-T is one use case. Review and select images together on a trusted LAN.
 
 [PolarisFTL on GitHub](https://github.com/PolarisFTL)
 
@@ -44,7 +44,7 @@ Then double-click again, or run bash Start-macOS.command from that folder. Quote
 
 5. If macOS blocks downloaded content, verify its origin and follow the system Privacy & Security approval flow for that item. Do not disable Gatekeeper, delete the system Python, or recursively remove quarantine attributes.
 
-Future .app bundles must be built on macOS and state their Intel or Apple Silicon architecture, signing, and test status. A single-architecture build is not Universal. Mac hardware, native-picker GUI, and remote CI have not been validated here. See docs/MACOS.md for troubleshooting.
+Future .app bundles must be built on macOS and state their Intel or Apple Silicon architecture, signing, and test status. A single-architecture build is not Universal. Mac hardware and native-picker GUI remain unvalidated; CI status follows actual repository records. See docs/MACOS.md for troubleshooting.
 
 [Official Python on macOS guide](https://docs.python.org/3/using/mac.html)
 
@@ -168,6 +168,8 @@ Remote users cannot configure host folders or run host administration. Back up S
 Fit preview was about 1149.95 × 417.05 while the PNG remained 8592 × 3116. Pixel checks apply to this batch and browser, not every ICC, alpha, or EXIF case or compressed-file bytes. HTTP roles are simulated, not a second-campus-device test. The old 86-test / 17-JS figures are historical. Details: TESTING.md.
 
 ### Public package and licensing
+
+The 2.2.1 local Windows Python run completed 127 tests: 126 passed, one symlink-permission skip, 49.001 s, including Chinese CLI output under CP1252. CI requires an actual run record. The table above remains the 2.1 historical baseline.
 
 The public allowlist excludes local/, originals, credentials, databases, real paths, and private screenshots. Code and documentation use MIT. Los Pollos Hermanos artwork and trademarks are third-party material excluded from MIT; no official affiliation, sponsorship, or authorization is claimed. See assets/README.md.
 

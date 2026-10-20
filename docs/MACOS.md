@@ -1,8 +1,8 @@
-# macOS 安装与使用指南
+# Comparison Viewer：macOS 安装与使用指南
 
-适用版本：2.1.0。作者：PolarisFTL 和 GPT 6 Astra。
+适用版本：2.2.1。作者：PolarisFTL 和 GPT 6 Astra；Mac 源码启动流程未经实机验收。
 
-**当前 Mac 交付方式是源码运行：先安装 Python 3.9+，再双击 `Start-macOS.command`。当前没有已构建、已实机验证的 Mac `.app` 下载包。Windows 的 `RGBTViewer.exe` 不能在 macOS 上直接运行。**
+**当前 Mac 交付方式是源码运行：先安装 Python 3.9+，再双击 `Start-macOS.command`。当前没有已构建、已实机验证的 Mac `.app` 下载包。Windows 的 `ComparisonViewer.exe` 不能在 macOS 上直接运行。**
 
 源码只使用 Python 标准库和本地 HTML/CSS/JavaScript，不需要 Node.js、npm、浏览器扩展或运行时 `pip install`。下载 Python 与项目时需要联网；安装完成后，本机查看功能可以离线运行。参与他人已开启的校园网协作时，你只需浏览器和对方提供的地址、口令，不需要在自己的 Mac 安装 Python。
 
@@ -40,7 +40,7 @@ python3 --version
 - 若解压位置确实是个人 `Projects` 文件夹，可执行下面的示例；位置不同时请改成自己的项目路径：
 
 ```bash
-cd "$HOME/Projects/RGBT-Comparison-Viewer"
+cd "$HOME/Projects/Comparison-Viewer"
 ```
 
 确认当前目录内有项目文件，然后恢复权限并启动：

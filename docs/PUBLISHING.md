@@ -1,4 +1,6 @@
-# GitHub 发布与便携打包
+# Comparison Viewer：GitHub 发布与便携打包
+
+项目仓库为 `https://github.com/PolarisFTL/comparison-viewer`。正式产物统一为 `ComparisonViewer.exe`、`Comparison-Viewer-windows-amd64-portable.zip` 与 `Comparison-Viewer-source.zip`；源码 ZIP 顶层目录为 `Comparison-Viewer/`。RGB-T / DroneVehicle 保留为历史使用案例与实测数据，不作为工具的任务限制。
 
 ## 公开代码与本机数据分离
 
@@ -26,7 +28,7 @@ Windows 不能直接生成经过验证的 macOS 应用。macOS 在对应 runner 
 
 中英报告由 `scripts/build_report.py` 同时生成 PDF 与 Markdown：`技术与使用报告-中文` 和 `Technical-and-User-Report-English`。每份报告都介绍原像素导出、性能边界、Mac 从源码启动以及内网协作。默认执行 `python scripts/build_report.py` 生成两种语言，也可用 `--language zh` 或 `--language en`。
 
-重建需要构建阶段依赖 `reportlab` 以及合法可用的宋体与 Times New Roman，不影响查看器运行时。脚本读取系统目录或显式字体参数：`--simsun`、`--times`、`--times-bold`、`--times-italic`；对应环境变量为 `RGBT_REPORT_SIMSUN`、`RGBT_REPORT_TIMES`、`RGBT_REPORT_TIMES_BOLD`、`RGBT_REPORT_TIMES_ITALIC`。Mac 未提供宋体时必须取得合法字体并显式指定，否则构建明确失败，不使用 STSong 等字体替代。PDF 仅嵌入所用字形的子集，不在源码 ZIP 或便携包中分发系统字体文件。
+重建需要构建阶段依赖 `reportlab` 以及合法可用的宋体与 Times New Roman，不影响查看器运行时。脚本读取系统目录或显式字体参数：`--simsun`、`--times`、`--times-bold`、`--times-italic`；对应环境变量为 `COMPARISON_REPORT_SIMSUN`、`COMPARISON_REPORT_TIMES`、`COMPARISON_REPORT_TIMES_BOLD`、`COMPARISON_REPORT_TIMES_ITALIC`。Mac 未提供宋体时必须取得合法字体并显式指定，否则构建明确失败，不使用 STSong 等字体替代。PDF 仅嵌入所用字形的子集，不在源码 ZIP 或便携包中分发系统字体文件。
 
 报告截图只使用 `docs/screenshots/` 下的合成示例，不放真实实验截图。报告区分实测值和设计机制；修改实现或测试后同步更新，不把旧版基线当作新版。Mac 用户详细启动步骤见 [MACOS.md](MACOS.md)，源码运行与未来 `.app` 构建必须分开描述。
 
