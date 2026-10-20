@@ -11,6 +11,6 @@ $('login-form').onsubmit=async e=>{
     else location.assign('/viewer');
   }catch(error){$('login-error').textContent=error.message}finally{$('login-submit').disabled=false}
 };
-$('save-recovery').onclick=()=>{if(!identity)return;const blob=new Blob([JSON.stringify(identity,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='RGBT-身份恢复码.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
+$('save-recovery').onclick=()=>{if(!identity)return;const blob=new Blob([JSON.stringify(identity,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Comparison-Viewer-身份恢复码.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)};
 $('enter-viewer').onclick=()=>location.assign('/viewer');
 })();
