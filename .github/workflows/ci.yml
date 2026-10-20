@@ -1,0 +1,72 @@
+name: Cross-platform checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      build_portable:
+        description: Build unsigned portable application bundles
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+        python: ['3.9', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Standard-library tests
+        run: python -m unittest discover -s tests -p "test_*.py"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Browser logic checks (build-time Node only)
+        run: |
+          node tests/frontend_unit.cjs
+          node tests/viewer_retry_unit.cjs
+          node tests/export_layout_unit.cjs
+          node tests/batch_export_unit.cjs
+          node tests/batch_workflow_unit.cjs
+      - name: Validate public source selection
+        run: python scripts/package_public.py --check
+      - name: Build clean source archive
+        if: matrix.os == 'windows-latest' && matrix.python == '3.12'
+        run: python scripts/package_public.py
+      - uses: actions/upload-artifact@v4
+        if: matrix.os == 'windows-latest' && matrix.python == '3.12'
+        with:
+          name: clean-source
+          path: dist/RGBT-Comparison-Viewer-source.zip*
+
+  portable:
+    if: github.event_name == 'workflow_dispatch' && inputs.build_portable
+    needs: tests
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install build dependency only
+        run: python -m pip install "pyinstaller==6.22.3" Pillow
+      - name: Build platform bundle
+        run: python scripts/build_portable.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portable-${{ matrix.os }}
+          path: dist/*portable*.zip*
