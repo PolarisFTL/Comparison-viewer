@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import stat
 import struct
+import sys
 import time
 import unicodedata
 
@@ -306,6 +307,13 @@ def build(config, output_dir=None, progress=None):
 
 
 if __name__ == "__main__":
+    # A Windows console or redirected pipe can inherit cp1252. Progress includes
+    # user-provided Unicode names, so the CLI always emits UTF-8, even to pipes.
+    # Keep this inside the entry point: importing/building in the GUI must not
+    # change the host process's streams. Escape lone surrogates safely if present.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     parser = argparse.ArgumentParser(description="Build a read-only image comparison index from a local schema-2 configuration")
     parser.add_argument("--config", type=Path, required=True, help="Private dataset JSON configuration")
     parser.add_argument("--output", type=Path, help="Output directory (default: local/indexes/<datasetId>)")

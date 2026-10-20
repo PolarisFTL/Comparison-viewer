@@ -26,7 +26,8 @@ from image_metadata import image_metadata
 from platform_support import local_interfaces, picker_command, project_root, resource_root, reveal_command
 from workspace_state import Workspace, atomic_json
 
-APP='RGBT Comparison Viewer'
+APP='Comparison Viewer'
+LEGACY_APP='RGBT Comparison Viewer'
 VERSION='2.2.1'
 DEFAULT_PORT=8770
 
@@ -402,13 +403,13 @@ def main(argv=None):
     if args.port:
         try:
             info=json.load(urlopen('http://127.0.0.1:{}/health'.format(args.port),timeout=1))
-            if info.get('app')==APP and info.get('project')==project:existing=info
+            if info.get('app') in (APP,LEGACY_APP) and info.get('project')==project:existing=info
         except (OSError,ValueError):pass
     if existing:
         base='http://127.0.0.1:{}/'.format(args.port)
         mode_changed=bool(args.lan)!=bool(existing.get('lanEnabled'))
         scope_changed=args.lan and requested_networks is not None and requested_networks!=set(existing.get('allowedSubnets') or [])
-        version_changed=existing.get('version')!=VERSION
+        version_changed=existing.get('version')!=VERSION or existing.get('app')!=APP
         if mode_changed or scope_changed or version_changed:
             print('Restarting the existing workspace service to apply the requested version/network mode/scope.',flush=True)
             info=json.load(urlopen(base+'api/info',timeout=2))

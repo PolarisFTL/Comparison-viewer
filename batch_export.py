@@ -190,7 +190,7 @@ class Manager:
             report_budget=RESERVE+len(entries)*2048
             required=(preview['bytes']+report_budget)*(2 if form=='zip' else 1)
             if shutil.disk_usage(parent).free<required:raise ValueError('目标磁盘可用空间不足（包含报告与安全余量）')
-            job_id=secrets.token_hex(12);batch='RGBT-'+time.strftime('%Y%m%d-%H%M%S')+'-'+job_id[:8]
+            job_id=secrets.token_hex(12);batch='Comparison-'+time.strftime('%Y%m%d-%H%M%S')+'-'+job_id[:8]
             private=self.base/job_id
             destination=parent/batch if form=='folder' else private/'files'
             if os.name=='nt' and max((len(str(destination/entry['relative'])) for entry in entries if entry['relative']),default=len(str(destination)))>240:

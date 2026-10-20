@@ -2,9 +2,9 @@
 
 <p align="center"><img src="assets/brand.png" width="140" alt="项目界面标识"></p>
 
-# RGBT Detection Comparison Viewer
+# Comparison Viewer
 
-本地图像对比、多人筛选与论文制图工具。面向 RGB-T 目标检测等实验结果，也可比较其他按样本对应的图像。**原始图片只读，运行时不依赖 CDN、npm 或在线 API。**
+通用的本地图像对比、多人筛选与拼图工具。适用于检测、分割、生成、图像增强等按样本对应的可视化结果；RGB-T 检测是其中一个使用案例。**原始图片只读，运行时不依赖 CDN、npm 或在线 API。**
 
 作者：[PolarisFTL](https://github.com/PolarisFTL) 与 GPT 6 Astra（AI 编程协作，提供方 [OpenAI](https://openai.com/)）。
 
@@ -12,13 +12,13 @@
 
 ## 下载与启动
 
-**[下载 v2.2.1 与校验文件](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/tag/v2.2.1)**
+**[下载 v2.2.1 与校验文件](https://github.com/PolarisFTL/comparison-viewer/releases/tag/v2.2.1)**
 
 | 使用方式 | 下载 | 运行要求 |
 |---|---|---|
-| Windows x64 便携包（推荐） | [便携 ZIP](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/download/v2.2.1/RGBT-Comparison-Viewer-windows-amd64-portable.zip) | 解压后双击 `RGBTViewer.exe`，无需安装 Python、Node 或 .NET |
-| Windows 单文件 | [RGBTViewer.exe](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/download/v2.2.1/RGBTViewer.exe) | 内含运行环境；建议放入可写目录 |
-| Windows / macOS 源码 | [源码 ZIP](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/download/v2.2.1/RGBT-Comparison-Viewer-source.zip) | 主机 Python 3.9+，运行时仅标准库；协作访问者只需浏览器 |
+| Windows x64 便携包（推荐） | [便携 ZIP](https://github.com/PolarisFTL/comparison-viewer/releases/download/v2.2.1/Comparison-Viewer-windows-amd64-portable.zip) | 解压后双击 `ComparisonViewer.exe`，无需安装 Python、Node 或 .NET |
+| Windows 单文件 | [ComparisonViewer.exe](https://github.com/PolarisFTL/comparison-viewer/releases/download/v2.2.1/ComparisonViewer.exe) | 内含运行环境；建议放入可写目录 |
+| Windows / macOS 源码 | [源码 ZIP](https://github.com/PolarisFTL/comparison-viewer/releases/download/v2.2.1/Comparison-Viewer-source.zip) | 主机 Python 3.9+，运行时仅标准库；协作访问者只需浏览器 |
 
 1. **启动。** Windows 便携包双击 EXE；源码版 Windows 双击 `Start-Windows.bat`，macOS 双击 `Start-macOS.command`。源码包须完整解压到可写目录。
 2. **配置。** 在欢迎页填写数据集名，选择 **2-24 个图片目录**，指定基准方法，编辑各列显示名。
@@ -77,11 +77,12 @@ GT/          sample_001.png  sample_002.png
 
 | 已执行的场景 | 证据与范围 |
 |---|---|
-| 大库审计基线 | 8,980 样本、10 方法、89,800 文件；索引扫描匹配 8.386 秒，未全量像素解码 |
+| 历史 RGB-T 大库审计基线 | 8,980 样本、10 方法、89,800 文件；索引扫描匹配 8.386 秒，未全量像素解码 |
 | 2.2 实际浏览 | 1,503 × 10 数据副本连续翻页 20 次，矩阵始终 40 个图片节点，无控制台错误 |
 | 超过 200 行的筛选 | 合成 310 × 4，N=3 得到 205 样本；复制 819 原图，1 Missing，819 个 SHA256 均与源一致 |
 | 真实小批次 | N=2 筛出 20 × 10，200 文件哈希全同，含验证 5.516 秒，仅代表该批次 |
 | 2.2 回归基线 | Python 123 项：122 通过、1 权限跳过；JS 65 项及另 4 项真实 Canvas／PNG 检查通过 |
+| 2.2.1 Windows 回归 | Python 127 项：126 通过、1 符号链接权限跳过，49.001 秒；覆盖中文 CLI 编码兼容修复 |
 
 上述为本机 Windows 功能基线，发布版本的附加检查见 [TESTING.md](docs/TESTING.md)。稳定节点数不等于进程内存恒定；巨幅图片、多人并发和导出仍会增加磁盘、网络及内存负载，不承诺任何设备永不卡顿。
 
@@ -110,7 +111,7 @@ GT/          sample_001.png  sample_002.png
 | [中文报告](docs/技术与使用报告-中文.pdf) / [English report](docs/Technical-and-User-Report-English.pdf) | 技术与使用 PDF，宋体／Times New Roman 子集嵌入 |
 | [TESTING](docs/TESTING.md) / [PUBLISHING](docs/PUBLISHING.md) | 实测、未验证项目与干净打包 |
 
-源码运行不需要 Node；开发测试入口为 `python -m unittest discover -s tests -p "test_*.py"`。仓库提供 Windows/macOS [CI 工作流](https://github.com/PolarisFTL/rgbt-comparison-viewer/actions)，实际执行状态以 Actions 为准，CI 不代替原生 GUI 验收。
+源码运行不需要 Node；开发测试入口为 `python -m unittest discover -s tests -p "test_*.py"`。仓库提供 Windows/macOS [CI 工作流](https://github.com/PolarisFTL/comparison-viewer/actions)，实际执行状态以 Actions 为准，CI 不代替原生 GUI 验收。
 
 尚未完成 Mac 实机、原生目录对话框 GUI、外部 MulimgViewer GUI、真实第二台校园网设备和长期进程内存验收。默认 `local/` 已忽略；自定义 workspace 请放仓库外或另加忽略规则。配置、索引、口令、SQLite、标记、导出和真实实验图不提交 GitHub；正式发布使用白名单源码包。
 

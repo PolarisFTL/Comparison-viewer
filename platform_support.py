@@ -118,7 +118,7 @@ def notify_error(message):
     try:
         import tkinter as tk
         from tkinter import messagebox
-        root=tk.Tk();root.withdraw();messagebox.showerror('RGBT Comparison Viewer',message,parent=root);root.destroy()
+        root=tk.Tk();root.withdraw();messagebox.showerror('Comparison Viewer',message,parent=root);root.destroy()
     except Exception:
         if sys.stderr:
             print(message,file=sys.stderr)

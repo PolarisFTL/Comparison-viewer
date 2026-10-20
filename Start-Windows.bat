@@ -1,8 +1,8 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-if exist "%~dp0RGBTViewer.exe" (
-  start "" "%~dp0RGBTViewer.exe" %*
+if exist "%~dp0ComparisonViewer.exe" (
+  start "" "%~dp0ComparisonViewer.exe" %*
   exit /b 0
 )
 where py >nul 2>nul
@@ -22,7 +22,7 @@ if not errorlevel 1 (
   )
 )
 echo Python 3.9 or newer was not found.
-echo Install Python, or use a published Windows portable package containing RGBTViewer.exe.
+echo Install Python, or use a published Windows portable package containing ComparisonViewer.exe.
 pause
 exit /b 1
 :finish

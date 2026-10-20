@@ -2,9 +2,9 @@
 
 <p align="center"><img src="assets/brand.png" width="140" alt="Project interface artwork"></p>
 
-# RGBT Detection Comparison Viewer
+# Comparison Viewer
 
-A local tool for comparing image results, reviewing samples together, and preparing paper figures. Built for RGB-T detection experiments and other sample-aligned image outputs. **Original images remain read-only. Runtime has no CDN, npm, or online API dependency.**
+A general-purpose local tool for comparing images, reviewing samples together, and making montages. Use it for sample-aligned detection, segmentation, generation, enhancement, and other visual results; RGB-T detection is one use case. **Original images remain read-only. Runtime has no CDN, npm, or online API dependency.**
 
 Authors: [PolarisFTL](https://github.com/PolarisFTL) and GPT 6 Astra (AI coding collaboration, provided by [OpenAI](https://openai.com/)).
 
@@ -12,13 +12,13 @@ Authors: [PolarisFTL](https://github.com/PolarisFTL) and GPT 6 Astra (AI coding 
 
 ## Download and start
 
-**[v2.2.1 downloads and checksums](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/tag/v2.2.1)**
+**[v2.2.1 downloads and checksums](https://github.com/PolarisFTL/comparison-viewer/releases/tag/v2.2.1)**
 
 | Option | Download | Requirements |
 |---|---|---|
-| Windows x64 portable bundle, recommended | [Portable ZIP](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/download/v2.2.1/RGBT-Comparison-Viewer-windows-amd64-portable.zip) | Extract and double-click `RGBTViewer.exe`; no Python, Node, or .NET installation |
-| Windows single executable | [RGBTViewer.exe](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/download/v2.2.1/RGBTViewer.exe) | Includes its runtime; place it in a writable location |
-| Windows / macOS source | [Source ZIP](https://github.com/PolarisFTL/rgbt-comparison-viewer/releases/download/v2.2.1/RGBT-Comparison-Viewer-source.zip) | Host Python 3.9+, standard library only; collaborators need just a browser |
+| Windows x64 portable bundle, recommended | [Portable ZIP](https://github.com/PolarisFTL/comparison-viewer/releases/download/v2.2.1/Comparison-Viewer-windows-amd64-portable.zip) | Extract and double-click `ComparisonViewer.exe`; no Python, Node, or .NET installation |
+| Windows single executable | [ComparisonViewer.exe](https://github.com/PolarisFTL/comparison-viewer/releases/download/v2.2.1/ComparisonViewer.exe) | Includes its runtime; place it in a writable location |
+| Windows / macOS source | [Source ZIP](https://github.com/PolarisFTL/comparison-viewer/releases/download/v2.2.1/Comparison-Viewer-source.zip) | Host Python 3.9+, standard library only; collaborators need just a browser |
 
 1. **Start.** Use the Windows portable EXE. For source, extract the complete project into a writable directory, then run `Start-Windows.bat` or `Start-macOS.command`.
 2. **Configure.** Name the dataset, select **2-24 image folders**, choose a reference method, and edit method display names.
@@ -77,11 +77,12 @@ The index stores filenames and correspondence. Pagination, IntersectionObserver,
 
 | Executed scenario | Evidence and scope |
 |---|---|
-| Historical large-library audit | 8,980 samples, ten methods, 89,800 files; scanning/matching 8.386 s, without full-library pixel decoding |
+| Historical RGB-T library audit | 8,980 samples, ten methods, 89,800 files; scanning/matching 8.386 s, without full-library pixel decoding |
 | 2.2 real-data browsing | Twenty page changes on a 1,503 × 10 copy kept 40 image nodes, without console errors |
 | Beyond 200 summary rows | Synthetic 310 × 4, N=3 selected 205 samples; 819 copied originals matched source SHA256, with one Missing |
 | Real selected batch | N=2 selected 20 × 10; all 200 hashes matched, 5.516 s including verification for that batch only |
 | 2.2 regression baseline | Python: 123 tests, 122 passed and one permission skip; 65 JS checks plus four real Canvas/PNG checks passed |
+| 2.2.1 Windows regression | Python: 127 tests, 126 passed and one symlink-permission skip, 49.001 s; covers Chinese CLI encoding compatibility |
 
 These are local Windows functional baselines; release-specific checks are in [TESTING.md](docs/TESTING.md). Stable node counts do not prove constant process memory. Huge images, concurrent visitors, and exports still consume disk, network, and memory; stall-free operation on every device is not promised.
 
@@ -110,7 +111,7 @@ All screenshots use generated OBB examples, not private research images.
 | [English report](docs/Technical-and-User-Report-English.pdf) / [中文报告](docs/技术与使用报告-中文.pdf) | Technical/user PDFs with embedded Times New Roman / SimSun subsets |
 | [TESTING](docs/TESTING.md) / [PUBLISHING](docs/PUBLISHING.md) | Executed checks, untested areas, and clean packaging |
 
-Node is not a runtime requirement. Run Python development tests with `python -m unittest discover -s tests -p "test_*.py"`. Windows/macOS [CI workflows](https://github.com/PolarisFTL/rgbt-comparison-viewer/actions) are supplied; see Actions for actual run status. CI is not native-GUI acceptance.
+Node is not a runtime requirement. Run Python development tests with `python -m unittest discover -s tests -p "test_*.py"`. Windows/macOS [CI workflows](https://github.com/PolarisFTL/comparison-viewer/actions) are supplied; see Actions for actual run status. CI is not native-GUI acceptance.
 
 Physical macOS, native folder-picker GUI, external MulimgViewer GUI, a second campus-network device, and long-running process-memory behavior have not been accepted on hardware. Default `local/` is ignored; put custom workspaces outside the repository or add explicit ignore rules. Keep configuration, indexes, credentials, SQLite, annotations, exports, and research images out of GitHub. Publish the allowlisted source package.
 
