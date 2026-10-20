@@ -3,6 +3,7 @@ import copy
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import struct
 import subprocess
@@ -279,9 +280,56 @@ class IndexerTests(unittest.TestCase):
         private = self.root / "config.json"
         private.write_text(json.dumps(self.config), encoding="utf-8")
         result = subprocess.run([sys.executable, str(Path(build_index.__file__)), "--config", str(private),
-                                 "--output", str(self.root / "cli-output")], capture_output=True, text=True)
+                                 "--output", str(self.root / "cli-output")], capture_output=True, text=True,
+                                encoding="utf-8")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertTrue((self.root / "cli-output" / "manifest.js").is_file())
+
+    def test_cli_uses_utf8_when_inherited_pipe_encoding_is_cp1252(self):
+        filename = "测试图像.png"
+        png(self.reference / filename)
+        png(self.prediction / filename)
+        original_hash = hashlib.sha256((self.reference / filename).read_bytes()).hexdigest()
+        private = self.root / "配置.json"
+        private.write_text(json.dumps(self.config, ensure_ascii=False), encoding="utf-8")
+        output = self.root / "命令行输出"
+        environment = dict(os.environ, PYTHONIOENCODING="cp1252", PYTHONUTF8="0")
+        result = subprocess.run([sys.executable, str(Path(build_index.__file__)), "--config", str(private),
+                                 "--output", str(output)], capture_output=True, env=environment)
+        self.assertEqual(result.returncode, 0, result.stderr.decode("utf-8", errors="replace"))
+        self.assertIn("Scanning 算法 A", result.stdout.decode("utf-8"))
+        manifest_text = (output / "manifest.js").read_text(encoding="utf-8")
+        self.assertIn("可视化测试", manifest_text)
+        self.assertIn(filename, manifest_text)
+        audit = json.loads((output / "index_audit.json").read_text(encoding="utf-8"))
+        self.assertEqual(audit["dataset"], self.config["dataset"])
+        self.assertEqual(audit["methods"][0]["root"], str(self.prediction))
+        self.assertEqual(hashlib.sha256((self.reference / filename).read_bytes()).hexdigest(), original_hash)
+
+    def test_cli_error_uses_utf8_for_unicode_paths(self):
+        environment = dict(os.environ, PYTHONIOENCODING="cp1252", PYTHONUTF8="0")
+        result = subprocess.run([sys.executable, str(Path(build_index.__file__)), "--config",
+                                 str(self.root / "缺失配置.json")], capture_output=True, env=environment)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("Index build failed:", result.stderr.decode("utf-8"))
+        self.assertIn("缺失配置.json", result.stderr.decode("utf-8"))
+        self.assertNotIn("UnicodeEncodeError", result.stderr.decode("utf-8"))
+
+    def test_library_import_and_build_do_not_change_process_stream_encoding(self):
+        png(self.reference / "001.png")
+        private = self.root / "config.json"
+        private.write_text(json.dumps(self.config), encoding="utf-8")
+        script = ("import json, sys; from pathlib import Path; "
+                  "before = (sys.stdout.encoding, sys.stderr.encoding); import build_index; "
+                  "assert (sys.stdout.encoding, sys.stderr.encoding) == before; "
+                  "build_index.build(json.loads(Path(sys.argv[1]).read_text(encoding='utf-8')), Path(sys.argv[2])); "
+                  "assert (sys.stdout.encoding, sys.stderr.encoding) == before; "
+                  "assert sys.stdout.encoding.lower() == 'cp1252'; print('encoding unchanged')")
+        environment = dict(os.environ, PYTHONIOENCODING="cp1252", PYTHONUTF8="0")
+        result = subprocess.run([sys.executable, "-c", script, str(private), str(self.root / "library-output")],
+                                cwd=str(Path(build_index.__file__).parent), capture_output=True, env=environment)
+        self.assertEqual(result.returncode, 0, result.stderr.decode("cp1252", errors="replace"))
+        self.assertEqual(result.stdout.strip(), b"encoding unchanged")
 
 
 if __name__ == "__main__":
