@@ -25,13 +25,13 @@ def build(output=None):
     work = ROOT / 'local' / 'build'
     work.mkdir(parents=True, exist_ok=True)
     command = [sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean',
-               '--name', 'RGBTViewer', '--windowed',
+               '--name', 'ComparisonViewer', '--windowed',
                '--distpath', str(destination), '--workpath', str(work / 'pyinstaller'),
                '--specpath', str(work), '--icon', str(ROOT / 'assets' / 'brand.png'),
                '--hidden-import', 'tkinter', '--hidden-import', '_tkinter']
     command.append('--onefile' if sys.platform == 'win32' else '--onedir')
     if sys.platform == 'darwin':
-        command.extend(['--osx-bundle-identifier', 'org.rgbtviewer.desktop'])
+        command.extend(['--osx-bundle-identifier', 'org.comparisonviewer.desktop'])
     for relative in ('index.html', 'login.html', 'setup.html', 'js', 'css', 'assets'):
         source = ROOT / relative
         if not source.exists():
@@ -42,12 +42,12 @@ def build(output=None):
     environment=os.environ.copy()
     environment['PYINSTALLER_CONFIG_DIR']=str(work/'cache')
     subprocess.run(command, cwd=str(ROOT), env=environment, check=True)
-    bundle = destination / ('RGBTViewer.exe' if sys.platform == 'win32' else 'RGBTViewer.app')
+    bundle = destination / ('ComparisonViewer.exe' if sys.platform == 'win32' else 'ComparisonViewer.app')
     if not bundle.exists():
         raise RuntimeError('Builder finished without producing the expected application.')
     system = 'windows' if sys.platform == 'win32' else 'macos'
     architecture = platform.machine().lower()
-    archive_path = destination / ('RGBT-Comparison-Viewer-{}-{}-portable.zip'.format(system, architecture))
+    archive_path = destination / ('Comparison-Viewer-{}-{}-portable.zip'.format(system, architecture))
     with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         bundle_files = [bundle] if bundle.is_file() else sorted(bundle.rglob('*'))
         for path in bundle_files:
@@ -74,7 +74,7 @@ def build(output=None):
 
 
 def _write_member(archive, path, relative):
-    info = zipfile.ZipInfo('RGBT-Comparison-Viewer/' + relative.as_posix())
+    info = zipfile.ZipInfo('Comparison-Viewer/' + relative.as_posix())
     info.create_system = 3
     info.compress_type = zipfile.ZIP_DEFLATED
     if path.is_symlink():

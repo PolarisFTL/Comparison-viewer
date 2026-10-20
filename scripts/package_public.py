@@ -91,7 +91,7 @@ def collect(root=ROOT):
 def package(root=ROOT, output=None):
     root = Path(root).resolve()
     paths = collect(root)
-    destination = Path(output) if output else root / 'dist' / 'RGBT-Comparison-Viewer-source.zip'
+    destination = Path(output) if output else root / 'dist' / 'Comparison-Viewer-source.zip'
     destination = destination.resolve()
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix('.zip.tmp')
@@ -99,7 +99,7 @@ def package(root=ROOT, output=None):
         with zipfile.ZipFile(temporary, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
             for path in paths:
                 relative = path.relative_to(root)
-                member = 'RGBT-Comparison-Viewer/' + relative.as_posix()
+                member = 'Comparison-Viewer/' + relative.as_posix()
                 info = zipfile.ZipInfo(member)
                 info.create_system = 3
                 mode = 0o755 if path.suffix == '.command' else 0o644

@@ -53,10 +53,10 @@ def find_font(explicit, env_name, names):
 
 def register_fonts(args):
     paths = {
-        'SimSun': find_font(args.simsun, 'RGBT_REPORT_SIMSUN', ('simsun.ttc', 'SimSun.ttf')),
-        'TNR': find_font(args.times, 'RGBT_REPORT_TIMES', ('times.ttf', 'Times New Roman.ttf')),
-        'TNRBold': find_font(args.times_bold, 'RGBT_REPORT_TIMES_BOLD', ('timesbd.ttf', 'Times New Roman Bold.ttf')),
-        'TNRItalic': find_font(args.times_italic, 'RGBT_REPORT_TIMES_ITALIC', ('timesi.ttf', 'Times New Roman Italic.ttf')),
+        'SimSun': find_font(args.simsun, 'COMPARISON_REPORT_SIMSUN', ('simsun.ttc', 'SimSun.ttf')),
+        'TNR': find_font(args.times, 'COMPARISON_REPORT_TIMES', ('times.ttf', 'Times New Roman.ttf')),
+        'TNRBold': find_font(args.times_bold, 'COMPARISON_REPORT_TIMES_BOLD', ('timesbd.ttf', 'Times New Roman Bold.ttf')),
+        'TNRItalic': find_font(args.times_italic, 'COMPARISON_REPORT_TIMES_ITALIC', ('timesi.ttf', 'Times New Roman Italic.ttf')),
     }
     for name, path in paths.items():
         pdfmetrics.registerFont(TTFont(name, str(path), subfontIndex=0))
@@ -114,7 +114,7 @@ class NumberedCanvas(canvas.Canvas):
             self.line(52, PAGE_H - 39, PAGE_W - 52, PAGE_H - 39)
             self.setFillColor(MUTED)
             self.setFont('TNR', 8.2)
-            self.drawString(52, PAGE_H - 29, 'RGBT COMPARISON VIEWER  |  TECHNICAL AND USER REPORT')
+            self.drawString(52, PAGE_H - 29, 'COMPARISON VIEWER  |  TECHNICAL AND USER REPORT')
             self.drawString(52, 28, AUTHORS + '  |  ' + VERSION_DATE)
             self.drawRightString(PAGE_W - 52, 28, '{} / {}'.format(self._pageNumber, len(self.saved)))
             canvas.Canvas.showPage(self)
@@ -141,10 +141,10 @@ def build_table(rows, ratios, paragraph_styles):
 
 def blocks_zh():
     return [
-        ('RGBT Detection\nComparison Viewer', [
+        ('Comparison\nViewer', [
             ('p', '技术与使用报告 - 中文版 2.2.1'),
-            ('small', '2.2.1 发布整理：加入中英文 README 切换，更新界面标识及公开合成截图；未增加分析功能。下文保留 2.1 / 2.2 实测基线，发布附加检查见 TESTING.md。'),
-            ('p', '作者：PolarisFTL 与 GPT 6 Astra。以本地目录为起点，进行多方法图像比较、典型样本筛选与可信内网协作。'),
+            ('small', '2.2.1 统一命名为 Comparison Viewer，加入中英文 README 切换，更新标识与合成截图，并修复 Windows 中文 CLI 编码；未增加分析功能。下文保留 2.1 / 2.2 实测基线。'),
+            ('p', '作者：PolarisFTL 与 GPT 6 Astra。以本地目录为起点，对检测、分割、生成、增强等按样本对应的可视化结果进行比较、筛选与可信内网协作。RGB-T 是其中一个使用案例。'),
             ('url', 'PolarisFTL GitHub', 'https://github.com/PolarisFTL'),
             ('small', 'GPT 6 Astra 为 AI 编程协作署名，提供方为 OpenAI。下方为提供方网站，不是模型个人 GitHub 主页。'),
             ('url', 'OpenAI', 'https://openai.com/'),
@@ -164,7 +164,7 @@ def blocks_zh():
             ('h', '目录选择、Tk 与安全提示'),
             ('p', '4. 在配置页点击选择目录，在主机的系统对话框中选文件夹；或使用页面路径输入框粘贴目录绝对路径。若选择器报 tkinter / _tkinter 错误，可先运行 python3 -m tkinter 检查当前解释器，再使用官方 Python 安装程序或直接手填路径。不要用 pip install tkinter 修复标准库组件。'),
             ('p', '5. 如 macOS 拦截下载内容，先核实来源，再按系统“隐私与安全性”中的受控允许流程处理；不关闭 Gatekeeper，不删除系统 Python，不批量移除下载隔离标记。'),
-            ('small', '未来的 .app 须在真实 macOS 或 macOS CI 构建，并分别说明 Intel / Apple Silicon 架构、签名和测试状态；单架构不能称为 Universal。目前 Mac 实机、原生目录对话框 GUI 和远程 CI 尚未执行。详细排障见 docs/MACOS.md。'),
+            ('small', '未来的 .app 须在真实 macOS 或 macOS CI 构建，并分别说明 Intel / Apple Silicon 架构、签名和测试状态；单架构不能称为 Universal。Mac 实机与原生目录对话框 GUI 尚未验收，CI 以仓库实际记录为准。详细排障见 docs/MACOS.md。'),
             ('url', 'Python macOS 安装说明', 'https://docs.python.org/3/using/mac.html'),
         ]),
         ('02  数据一致性与安全匹配', [
@@ -213,6 +213,7 @@ def blocks_zh():
             ('table', [['项目', '2.1 Windows / Chromium 已完成基线'], ['Python 完整测试', '95 项：94 通过、1 跳过（Windows 符号链接权限）；25.309 秒'], ['JavaScript 检查', '40 项：36 项无依赖 Node 检查 + 4 项真实 Skia Canvas / PNG 回读'], ['Windows 2.1 便携 EXE', '13,680,469 字节，GUI 子系统\n仅 Windows PATH 无 Python / Node；启动和原生 4×4 PNG 保存成功'], ['混合尺寸 PNG', '865 × 621；16 单元逐像素与原图 RGB 相同，差异 0'], ['鼠标框选 ROI', '426 × 90；4 单元坐标与尺寸均为整数、1:1，像素差异 0'], ['真实 4 样本 × 10 方法', '8592 × 3116 已保存；40 单元 840 × 712、scale 1、缺失失败 0'], ['真实图像像素核验', '本批 40/40 区域与原图经 PIL 解码后的 RGB 像素完全一致'], ['超限与拆分', '52.89MP 拒绝且无画布；拆为 7 行与 1 行，两份 PNG 均保存'], ['macOS / CI / 选择器 GUI', '未 Mac 实机、未远程 CI，原生对话框未操作验收']], [1.2, 2.7]),
             ('p', 'CSS 适应预览约 1149.95 × 417.05，但 PNG 仍为 8592 × 3116。像素核验只针对本批图像与该浏览器，不泛化为所有 ICC、透明度、EXIF 场景或压缩字节相同。HTTP 模拟身份不证明第二台校园网设备可达；旧 86 项／17 JS 属上一轮。详见 TESTING.md。'),
             ('h', '公开内容与许可'),
+            ('small', '2.2.1 Windows 本地 Python 回归为 127 项：126 通过、1 符号链接权限跳过，49.001 秒，含 CP1252 下中文 CLI 输出检查；CI 状态以实际记录为准。此处上表仍为 2.1 历史基线。'),
             ('p', '公开包使用白名单，排除 local/、原图、口令、数据库、真实路径和私有截图。代码与文档 MIT；Los Pollos Hermanos 图像与商标属于第三方材料，不包含在 MIT 中，不声明官方关联、赞助或授权。详见 assets/README.md。'),
             ('small', '报告重建需 reportlab，以及合法可用的宋体和 Times New Roman。构建脚本从环境或系统字体目录查找，缺失时明确报错，不替换成 STSong。PDF 只嵌入所用字形子集，不将系统字体文件加入源码或发布 ZIP。'),
             ('url', '项目发起者 PolarisFTL', 'https://github.com/PolarisFTL'),
@@ -225,10 +226,10 @@ def blocks_zh():
 
 def blocks_en():
     return [
-        ('RGBT Detection\nComparison Viewer', [
+        ('Comparison\nViewer', [
             ('p', 'Technical and User Report - English Edition 2.2.1'),
-            ('small', 'Release 2.2.1 adds Chinese/English README switching, refreshed interface artwork, and public synthetic screenshots. It adds no analysis feature. The 2.1 / 2.2 test baselines remain below; release checks are in TESTING.md.'),
-            ('p', 'Authors: PolarisFTL and GPT 6 Astra. A local workspace for comparing method outputs, selecting representative samples, and reviewing images together on a trusted LAN.'),
+            ('small', 'Release 2.2.1 adopts the general name Comparison Viewer, adds bilingual README navigation, refreshes artwork/screenshots, and fixes Windows Chinese CLI encoding. It adds no analysis feature. Historical 2.1 / 2.2 baselines remain below.'),
+            ('p', 'Authors: PolarisFTL and GPT 6 Astra. A local workspace for comparing sample-aligned detection, segmentation, generation, enhancement, and other image outputs. RGB-T is one use case. Review and select images together on a trusted LAN.'),
             ('url', 'PolarisFTL on GitHub', 'https://github.com/PolarisFTL'),
             ('small', 'GPT 6 Astra is credited for AI coding collaboration. OpenAI is its provider; the link below identifies the provider, not a personal GitHub account for the model.'),
             ('url', 'OpenAI', 'https://openai.com/'),
@@ -248,7 +249,7 @@ def blocks_en():
             ('h', 'Folder picking, Tk, and system prompts'),
             ('p', '4. Choose folders through the host-side dialog, or paste absolute folder paths into the setup fields. If tkinter or _tkinter is missing, run python3 -m tkinter to check the selected interpreter. Use an official Python installation or the manual path fields; pip install tkinter is not a fix for a missing standard-library component.'),
             ('p', '5. If macOS blocks downloaded content, verify its origin and follow the system Privacy & Security approval flow for that item. Do not disable Gatekeeper, delete the system Python, or recursively remove quarantine attributes.'),
-            ('small', 'Future .app bundles must be built on macOS and state their Intel or Apple Silicon architecture, signing, and test status. A single-architecture build is not Universal. Mac hardware, native-picker GUI, and remote CI have not been validated here. See docs/MACOS.md for troubleshooting.'),
+            ('small', 'Future .app bundles must be built on macOS and state their Intel or Apple Silicon architecture, signing, and test status. A single-architecture build is not Universal. Mac hardware and native-picker GUI remain unvalidated; CI status follows actual repository records. See docs/MACOS.md for troubleshooting.'),
             ('url', 'Official Python on macOS guide', 'https://docs.python.org/3/using/mac.html'),
         ]),
         ('02  Dataset consistency and safe matching', [
@@ -297,6 +298,7 @@ def blocks_en():
             ('table', [['Item', 'Completed 2.1 Windows / Chromium baseline'], ['Complete Python run', '95 tests: 94 passed, one Windows symlink-permission skip; 25.309 s'], ['JavaScript checks', '40: 36 dependency-free Node checks and four real Skia Canvas / PNG round trips'], ['Windows 2.1 portable EXE', '13,680,469 bytes, GUI subsystem; ran with Windows-only PATH, without Python/Node; native 4×4 PNG saved'], ['Mixed-size PNGs', '865 × 621; all 16 RGB regions exactly match their originals'], ['Mouse-drawn ROI', '426 × 90; four integer, 1:1 crops with zero pixel differences'], ['Real four rows, ten methods', '8592 × 3116 saved; 40 regions at 840 × 712, scale 1, no missing/errors'], ['Real-data pixel verification', 'All 40/40 regions exactly match their originals decoded to RGB by PIL'], ['Guard and splitting', '52.89 MP rejected without a canvas; seven-row and one-row PNGs saved'], ['Mac / CI / native picker', 'No Mac hardware or remote CI run; picker GUI not interactively accepted']], [1.2, 2.7]),
             ('p', 'Fit preview was about 1149.95 × 417.05 while the PNG remained 8592 × 3116. Pixel checks apply to this batch and browser, not every ICC, alpha, or EXIF case or compressed-file bytes. HTTP roles are simulated, not a second-campus-device test. The old 86-test / 17-JS figures are historical. Details: TESTING.md.'),
             ('h', 'Public package and licensing'),
+            ('small', 'The 2.2.1 local Windows Python run completed 127 tests: 126 passed, one symlink-permission skip, 49.001 s, including Chinese CLI output under CP1252. CI requires an actual run record. The table above remains the 2.1 historical baseline.'),
             ('p', 'The public allowlist excludes local/, originals, credentials, databases, real paths, and private screenshots. Code and documentation use MIT. Los Pollos Hermanos artwork and trademarks are third-party material excluded from MIT; no official affiliation, sponsorship, or authorization is claimed. See assets/README.md.'),
             ('small', 'Rebuilding these reports requires reportlab and legally available SimSun and Times New Roman files. The builder discovers system or explicitly supplied fonts and fails if they are absent; it does not substitute STSong. PDFs embed used-glyph subsets only. Font files are not included in source or release ZIPs.'),
             ('url', 'Project initiator: PolarisFTL', 'https://github.com/PolarisFTL'),
@@ -411,7 +413,7 @@ def build(language, output_dir):
     md.write_text(markdown(pages), encoding='utf-8')
     document = SimpleDocTemplate(str(destination), pagesize=A4, leftMargin=52, rightMargin=52,
                                  topMargin=57, bottomMargin=49,
-                                 title='RGBT Comparison Viewer - ' + ('技术与使用报告' if language == 'zh' else 'Technical and User Report'),
+                                 title='Comparison Viewer - ' + ('技术与使用报告' if language == 'zh' else 'Technical and User Report'),
                                  author=AUTHORS, subject='Local comparison, native-pixel export, macOS use, and trusted LAN review')
     document.build(render_blocks(pages, language), canvasmaker=NumberedCanvas)
     print('Created ' + str(destination))
